@@ -11,11 +11,11 @@ export const Cell = ({ columnIndex, rowIndex, style, columnCount, data }) => {
 
     return (
        <div style={cellStyle}>
-          {item ? (
+          {item && 
             
               <>
               {item.id}
-               <CharactersCard
+              <CharactersCard
                   id={item.id}
                   style={style}
                   species={item.species}
@@ -23,12 +23,7 @@ export const Cell = ({ columnIndex, rowIndex, style, columnCount, data }) => {
                   image={item.image}
                />
               </>
-              
-            
-             
-          ) : (
-             'Loading...'
-          )}
+     }
        </div>
     );
  };

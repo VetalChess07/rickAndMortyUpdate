@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import debounce from 'lodash.debounce';
 import { useStores } from '../../../context/root-store-context';
@@ -7,39 +7,41 @@ import FilterPostsInput from '../../../ui/inputs/filterPostsInput/FilterPostsInp
 const CharactersFilters = observer(() => {
   const { characters } = useStores();
   const [name, setName] = useState(characters.filterName);
-  const lastNameRef = useRef(name);
+  const [species, setSpecies] = useState(characters.species)
 
   const debouncedLoadCharacters = useCallback(
-    debounce((newName) => {
-      if (newName.trim() !== '' && newName.trim() !== characters.filterName) {
+    debounce((newName,newSpecies) => {
+      if (newName.trim() !== '' || newSpecies !== "" ) {
         characters.setFilterName(newName.trim());
+        characters.setFilterSpecies(newSpecies)
         characters.setIsFilter(true);
-      } else if (newName.trim() === '') {
-        characters.setFilteredPage(1);
+      } else {
         characters.setFilterName('');
+        characters.setFilterSpecies('');
         characters.setIsFilter(false);
       }
-    }, 1000),
+    }, 500),
     [characters]
   );
 
   useEffect(() => {
-    if (lastNameRef.current !== name) {
-      debouncedLoadCharacters(name);
-      lastNameRef.current = name;
-    }
+    debouncedLoadCharacters(name, species);
+
+    // Cleanup function to cancel the debounce if the component unmounts
     return () => {
       debouncedLoadCharacters.cancel();
+      debouncedLoadCharacters(name, species);
     };
-  }, [name, debouncedLoadCharacters]);
+  }, [name, debouncedLoadCharacters, species]);
 
   const handleNameChange = (newName) => {
-    if (lastNameRef.current !== newName) {
-      setName(newName);
-      characters.setFilteredPage(1);
-      characters.setFilteredCharactersData([]);
-    }
+    setName(newName);
   };
+  const handleSpeciesChange = (newName) => {
+    setSpecies(newName);
+  };
+
+
 
   return (
     <div>
@@ -49,7 +51,14 @@ const CharactersFilters = observer(() => {
         placeholder={'Filter by name...'}
         id={'name'}
       />
-      {characters.isFilter ? 'filter!!!' : 'not is filter'}
+      <FilterPostsInput
+        value={species}
+        setValue={handleSpeciesChange}
+        placeholder={'Filter by name...'}
+        id={'species'}
+      />
+      {characters.isFilter && "filter!"}
+      {species}
     </div>
   );
 });

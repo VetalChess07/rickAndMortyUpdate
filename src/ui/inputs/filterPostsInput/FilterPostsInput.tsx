@@ -9,7 +9,7 @@ const FilterPostsInput = ({value, setValue, placeholder, id}) => {
      }
     return (
         <>
-            <TextField onChange={onChange} id="outlined-basic" value={value} label={placeholder} variant="outlined" />
+            <TextField onChange={onChange} id={id} value={value} label={placeholder} variant="outlined" />
         </>
     );
 }

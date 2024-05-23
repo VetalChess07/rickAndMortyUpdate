@@ -1,71 +1,46 @@
 import { makeAutoObservable } from "mobx";
 import type { CharacterType } from "../types/characters/charactersType";
-import { getUniqueCharacters } from "../utils/functions/deleteDublicate";
+import { deleteDublicate } from "../utils/functions/deleteDublicate";
 
 class CharactersStore {
     charactersData: CharacterType[] = [];
     page = 1;
-    filteredCharactersData: CharacterType[] = [];
-    filteredPage = 1;
+ 
     filterName = '';
+    species=''
     isFilter = false;
-    fullLoading = false
+  
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    loadPosts(newData: CharacterType[] ) {
-        this.page += 1;
+    loadPosts(newData: CharacterType[] ) {    
         this.charactersData = [...this.charactersData, ...newData];
     }
-
-    filteredLoadPosts(newData: CharacterType[], inputVal: string, pageState: number) {
-        console.log(newData)
-        console.log(inputVal.length);
-        if (inputVal.length === 0) {
-            this.isFilter = false;
-            this.filterName = ''
-            this.filteredPage = 0
-          return 
-        } else {
-            this.isFilter = true;
-            this.filterName = inputVal;
-            
-            this.filteredPage += 1;
-            this.filteredCharactersData = [...this.filteredCharactersData, ...newData];
-            
-        }
-    }
-    filteredLoadPostsInfiniteScroll(newData:CharacterType[]){
-        this.filteredPage += 1;
-        const data = getUniqueCharacters([...this.filteredCharactersData, ...newData]) 
-        this.filteredCharactersData = [...data];
-    }
-
 
     setCharactersData(data: CharacterType[]) {
         this.charactersData = data;
     }
 
-    setFilteredCharactersData(data: CharacterType[]) {
-        this.filteredCharactersData = data;
-    }
-
     setFilterName(name: string) {
         this.filterName = name;
     }
+    setFilterSpecies(name: string) {
+        console.log(name)
+        this.species = name;
+    }
 
-    setPage(page: number) {
+    setPage(page:number) {
         this.page = page;
     }
     setIsFilter(boolean:boolean){
         this.isFilter = boolean
     }
-
-    setFilteredPage(page: number) {
-        this.filteredPage = page;
+    setPagePlusNumber(){
+      this.page++ ;
     }
+   
 }
 
 export default new CharactersStore();

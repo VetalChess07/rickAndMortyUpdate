@@ -1,13 +1,14 @@
-export function getUniqueCharacters(arr) {
-   const uniqueIds = new Set();
-   const uniqueCharacters = [];
+export function deleteDublicate(array ,key: string) {
+    const uniqueElements = [];
+  const seenKeys = new Set();
 
-   arr.forEach(character => {
-       if (!uniqueIds.has(character.id)) {
-           uniqueIds.add(character.id);
-           uniqueCharacters.push(character);
-       }
-   });
+  for (const element of array) {
+    if (!seenKeys.has(element[key])) {
+      seenKeys.add(element[key]);
+      uniqueElements.push(element);
+    }
+  }
 
-   return uniqueCharacters;
+  return uniqueElements;
 }
+
