@@ -15,7 +15,7 @@ const CharactersPosts = observer(() => {
    const [hasMoreCharacters, setHasMoreCharacters] = useState(true);
 
    const vars = {
-      page: characters.page,
+      page:  characters.page ,
       name: characters.isFilter ? characters.filterName : undefined,
       species: characters.species ? characters.species : undefined,
    };
@@ -47,21 +47,12 @@ const CharactersPosts = observer(() => {
    );
 
    useEffect(()=>{
+      console.log(error)
     
-      if(data){
-         const nextPage = data.characters.info.next;
-         if(nextPage){
-            console.log(hasMoreCharacters, " has" )
-            console.log(nextPage)
-            // refetch()
-            // const errorTimeout = setTimeout(() => {
-            //    loadMoreCharacters(); // Запускаем повторный запрос через задержку
-            // }, 5000); // Устанавливаем задержку в 5 секунд (можно изменить по вашему усмотрению)
-   
-            // return () => clearTimeout(errorTimeout);
-         }
-      }
+     
       if(error){
+         console.error(error, "err")
+         refetch()
          loadMoreCharacters()
       }
     
@@ -75,6 +66,7 @@ const CharactersPosts = observer(() => {
          {characters.charactersData.length} === {characters.page}
        
          {error && "error 123"}
+         <button onClick={()=> refetch()} >err!</button>
          <InfiniteLoader
             isItemLoaded={isCharacterLoaded}
             itemCount={characters.charactersData.length * 2}
