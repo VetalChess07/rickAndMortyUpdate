@@ -14,8 +14,15 @@ const CharactersPosts = observer(() => {
    const { characters } = useStores();
    const [hasMoreCharacters, setHasMoreCharacters] = useState(true);
 
+   const vars = {
+      page: characters.page,
+      name: characters.isFilter ? characters.filterName : undefined,
+      species: characters.species ? characters.species : undefined,
+   };
+
+   const endpoint = characters.isFilter ? GET_FILTERCHARACTERS : GET_CHARACTERS;
+
    useEffect(() => {
-      console.log(characters.species)
       characters.setPage(1);
       characters.setCharactersData([]);
      
@@ -26,17 +33,12 @@ const CharactersPosts = observer(() => {
       };
    }, [characters.isFilter, characters.filterName, characters, characters.species]);
 
+ 
+  
+   const isCharacterLoaded = index => index < characters.charactersData.length;
+   const rowCount = Math.ceil(characters.charactersData.length / columnCount);
 
-   const vars = {
-      page: characters.page,
-      name: characters.isFilter ? characters.filterName : undefined,
-      species: characters.species ? characters.species : undefined,
-   };
-
-   const endpoint = characters.isFilter ? GET_FILTERCHARACTERS : GET_CHARACTERS;
-
-
-   const { loadMoreCharacters, error, loading } = useInfiniteLoad(
+  const { loadMoreCharacters, error, loading, data, refetch  } = useInfiniteLoad(
       endpoint,
       vars,
       characters,
@@ -44,15 +46,38 @@ const CharactersPosts = observer(() => {
       hasMoreCharacters
    );
 
-   const isCharacterLoaded = index => index < characters.charactersData.length;
-   const rowCount = Math.ceil(characters.charactersData.length / columnCount);
+   useEffect(()=>{
+    
+      if(data){
+         const nextPage = data.characters.info.next;
+         if(nextPage){
+            console.log(hasMoreCharacters, " has" )
+            console.log(nextPage)
+            // refetch()
+            // const errorTimeout = setTimeout(() => {
+            //    loadMoreCharacters(); // Запускаем повторный запрос через задержку
+            // }, 5000); // Устанавливаем задержку в 5 секунд (можно изменить по вашему усмотрению)
+   
+            // return () => clearTimeout(errorTimeout);
+         }
+      }
+      if(error){
+         loadMoreCharacters()
+      }
+    
+   },[error, data, loading, loadMoreCharacters])
+
+
 
    return (
       <>
+      {loading && "load..."}
          {characters.charactersData.length} === {characters.page}
+       
+         {error && "error 123"}
          <InfiniteLoader
             isItemLoaded={isCharacterLoaded}
-            itemCount={hasMoreCharacters ? characters.charactersData.length + columnCount : characters.charactersData.length}
+            itemCount={characters.charactersData.length * 2}
             loadMoreItems={loadMoreCharacters}
          >
             {({ onItemsRendered, ref }) => (

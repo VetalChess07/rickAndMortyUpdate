@@ -4,7 +4,7 @@ import { deleteDublicate } from '../../utils/functions/deleteDublicate';
 
 export const useInfiniteLoad = (endpoint, vars, storeData, setHasMoreData, hasMoreData) => {
  
-  const { data, loading, error } = useQuery(endpoint, {
+  const { data, loading, error,refetch } = useQuery(endpoint, {
     variables: { ...vars },
    
   });
@@ -29,5 +29,5 @@ export const useInfiniteLoad = (endpoint, vars, storeData, setHasMoreData, hasMo
   }, [loading, hasMoreData ]);
 
   
-  return { data, loading, error, loadMoreCharacters };
+  return { data, loading, error, loadMoreCharacters,refetch };
 }

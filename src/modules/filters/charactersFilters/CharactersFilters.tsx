@@ -15,6 +15,7 @@ const CharactersFilters = observer(() => {
         characters.setFilterName(newName.trim());
         characters.setFilterSpecies(newSpecies)
         characters.setIsFilter(true);
+        characters.setPage(1)
       } else {
         characters.setFilterName('');
         characters.setFilterSpecies('');

@@ -16,7 +16,9 @@ class CharactersStore {
     }
 
     loadPosts(newData: CharacterType[] ) {    
-        this.charactersData = [...this.charactersData, ...newData];
+        // this.charactersData = [...this.charactersData, ...newData];
+        const res = deleteDublicate([...this.charactersData, ...newData], "id")
+        this.charactersData = [...res]
     }
 
     setCharactersData(data: CharacterType[]) {
